@@ -1,10 +1,11 @@
-import './App.css';
-import AuthPage from "./pages/AuthPage/AuthPage";
 import {useDispatch, useSelector} from "react-redux";
-import ContentPage from "./pages/ContentPage/ContentPage";
 import {useEffect} from "react";
+
 import {refreshService} from "./services/authService";
 import Loading from "./components/Loading/Loading";
+import './App.css';
+import ContentPage from "./pages/ContentPage/ContentPage";
+import AuthPage from "./pages/AuthPage/AuthPage";
 
 function App() {
     const {isAuth, isLoading} = useSelector(state => state.authSlice)
