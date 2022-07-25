@@ -1,8 +1,9 @@
-import './App.css';
-import AuthPage from "./pages/AuthPage/AuthPage";
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
+
 import {refreshAuthService} from "./services/authService";
+import './App.css';
+import AuthPage from "./pages/AuthPage/AuthPage";
 
 function App() {
     const dispatch = useDispatch()
