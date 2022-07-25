@@ -1,24 +1,29 @@
 import './App.css';
 import AuthPage from "./pages/AuthPage/AuthPage";
-import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {refreshAuthService} from "./services/authService";
+import ContentPage from "./pages/ContentPage/ContentPage";
+import {useEffect} from "react";
+import {refreshService} from "./services/authService";
+import Loading from "./components/Loading/Loading";
 
 function App() {
+    const {isAuth, isLoading} = useSelector(state => state.authSlice)
     const dispatch = useDispatch()
-    const isLoading = useSelector(state => state.AuthReducer.isLoading)
 
     useEffect(() => {
-        dispatch(refreshAuthService())
+        dispatch(refreshService())
     }, [])
 
-    if (isLoading) return <h1>Loading...</h1>
+    if (isLoading) return <Loading />
 
+    if (isAuth) {
+        return (
+            <ContentPage/>
+        )
+    }
     return (
-        <div style={{padding: '30px'}}>
-          <AuthPage/>
-        </div>
-    );
+        <AuthPage/>
+    )
 }
 
 export default App;

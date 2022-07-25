@@ -1,67 +1,62 @@
-import {loginActionCreator, setAuthActionCreator, setLoadingActionCreator as setAuthLoading} from "../reducers/AuthReducer/AuthReducer";
+import {setAuth, setLoading, setUser} from "../reducers/authReducer";
 import {$api, $apiWithAuth} from "../http";
-import {setUsersActionCreator} from "../reducers/UsersReducer/UsersReducer";
 
-export const loginService = (email, password) => async (dispatch) => {
-    dispatch(setAuthLoading(true))
+export const loginService = (email, password) => async dispatch => {
+    dispatch(setLoading(true))
     try {
         const response = await $apiWithAuth.post('/login', {email, password})
         if (response.data) {
-            console.log("response login", response.data)
-            dispatch(setAuthActionCreator(true))
-            dispatch(loginActionCreator(response.data.user))
+            dispatch(setUser(response.data.user))
             localStorage.setItem('token', response.data.accessToken)
+            dispatch(setAuth(true))
         }
     } catch (e) {
-        console.log(e.response?.data?.message)
+        console.log(e)
     }
-    dispatch(setAuthLoading(false))
+    dispatch(setLoading(false))
 }
 
-export const logoutService = () => async (dispatch) => {
-    dispatch(setAuthLoading(true))
-    try {
-        const response = await $apiWithAuth.post('/logout')
-        if (response.data) {
-            console.log("response logout", response.data)
-            dispatch(loginActionCreator({}))
-            dispatch(setAuthActionCreator(false))
-            dispatch(setUsersActionCreator([]))
-            localStorage.removeItem('token')
-        }
-    } catch (e) {
-        console.log(e.response?.data?.message)
-    }
-    dispatch(setAuthLoading(false))
-}
-
-export const registrationService = (email, password) => async (dispatch) => {
-    dispatch(setAuthLoading(true))
+export const registrationService = (email, password) => async dispatch => {
+    dispatch(setLoading(true))
     try {
         const response = await $apiWithAuth.post('/registration', {email, password})
         if (response.data) {
-            console.log("response reg", response.data)
-            dispatch(loginActionCreator(response.data.user))
-            dispatch(setAuthActionCreator(true))
+            dispatch(setUser(response.data.user))
             localStorage.setItem('token', response.data.accessToken)
+            dispatch(setAuth(true))
         }
     } catch (e) {
-        console.log(e.response?.data?.message)
+        console.log(e)
     }
-    dispatch(setAuthLoading(false))
+    dispatch(setLoading(false))
 }
 
-export const refreshAuthService = () => async (dispatch) => {
-    dispatch(setAuthLoading(true))
+export const logoutService = () => async dispatch => {
+    dispatch(setLoading(true))
+    try {
+        const response = await $apiWithAuth.post('/logout')
+        if (response.data) {
+            dispatch(setUser({}))
+            localStorage.removeItem('token')
+            dispatch(setAuth(false))
+        }
+    } catch (e) {
+        console.log(e)
+    }
+    dispatch(setLoading(false))
+}
+
+export const refreshService = () => async dispatch => {
+    dispatch(setLoading(true))
     try {
         const response = await $api.get('/refresh')
         if (response.data) {
-            console.log("refresh reg", response.data)
-            dispatch(setAuthActionCreator(true))
+            dispatch(setUser(response.data.user))
             localStorage.setItem('token', response.data.accessToken)
+            dispatch(setAuth(true))
         }
     } catch (e) {
-        console.log(e.response?.data?.message)
+        console.log(e)
     }
-    dispatch(setAuthLoading(false))
+    dispatch(setLoading(false))
 }
